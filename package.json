@@ -14,6 +14,7 @@
     "build": "tsc && shx chmod +x dist/*.js",
     "watch": "tsc --watch",
     "start": "node dist/index.js",
+    "start:mcp": "node dist/start.js",
     "inspect": "npm run build && npx @modelcontextprotocol/inspector node dist/index.js"
   },
   "dependencies": {
