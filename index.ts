@@ -113,7 +113,7 @@ class CodeContextServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error("Jira MCP server running on stdio");
+    console.error("Code Context MCP server running on stdio");
   }
 }
 

@@ -5,6 +5,7 @@ import fs from "fs";
 import dbInterface from "../utils/db.js";
 import { ProgressNotifier } from "../utils/types.js";
 import config from "../config.js";
+import { repoConfigManager } from "../utils/repoConfig.js";
 
 // Define input schema for ingestBranch
 export const IngestBranchSchema = z.object({
@@ -133,17 +134,26 @@ export async function ingestBranch(
       };
     }
 
-    const reposDir = config.REPO_CACHE_DIR;
-
-    // If branch is not specified, we'll get the default branch after cloning
+    // Get repository path using config manager
+    const { path: repoLocalPath, config: repoConfig } = repoConfigManager.getRepositoryPath(repoUrl, branch);
     let actualBranch = branch || "";
-    
+
     console.error(
-      `[ingestBranch] Cloning repository: ${repoUrl}, branch: ${actualBranch || 'default'}`
+      `[ingestBranch] Processing repository: ${repoUrl}, type: ${repoConfig.type}, branch: ${actualBranch || 'default'}`
     );
-    
-    // Use the modified clone function that reports progress (33% of total)
-    const repoLocalPath = await cloneRepositoryWithProgress(repoUrl, reposDir, progressNotifier);
+
+    // Handle repository based on type
+    if (repoConfig.type === 'local') {
+      console.error(`[ingestBranch] Using local repository at: ${repoLocalPath}`);
+    } else {
+      // Only clone if needed
+      if (repoConfigManager.needsCloning(repoUrl)) {
+        console.error(`[ingestBranch] Cloning remote repository to: ${repoLocalPath}`);
+        await cloneRepositoryWithProgress(repoUrl, path.dirname(repoLocalPath), progressNotifier);
+      } else {
+        console.error(`[ingestBranch] Using cached repository at: ${repoLocalPath}`);
+      }
+    }
     
     console.error(
       `[ingestBranch] Repository cloned to: ${repoLocalPath} (${
