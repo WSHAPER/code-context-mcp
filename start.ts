@@ -8,10 +8,10 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const DATA_DIR = process.env.DATA_DIR || join(process.env.HOME!, '.config', 'Claude', 'data');
-const REPO_CACHE_DIR = process.env.REPO_CACHE_DIR || join(process.env.HOME!, '.config', 'Claude', 'repos');
+const REPO_CONFIG_DIR = process.env.REPO_CONFIG_DIR || join(process.env.HOME!, '.config', 'Claude', 'repos');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-[DATA_DIR, REPO_CACHE_DIR].forEach(dir => {
+[DATA_DIR, REPO_CONFIG_DIR].forEach(dir => {
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true, mode: 0o755 });
   }
@@ -19,7 +19,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 
 process.stderr.write(`Starting Code Context MCP Server\n`);
 process.stderr.write(`Data Directory: ${DATA_DIR}\n`);
-process.stderr.write(`Repo Cache: ${REPO_CACHE_DIR}\n`);
+process.stderr.write(`Repo Config: ${REPO_CONFIG_DIR}\n`);
 process.stderr.write(`Node Environment: ${NODE_ENV}\n\n`);
 
 const checkOllama = () => {
@@ -49,7 +49,7 @@ const startMcpServer = () => {
   }
 
   process.env.DATA_DIR = DATA_DIR;
-  process.env.REPO_CACHE_DIR = REPO_CACHE_DIR;
+  process.env.REPO_CONFIG_DIR = REPO_CONFIG_DIR;
   process.env.NODE_ENV = NODE_ENV;
 
   const server = spawn('node', [serverPath, ...process.argv.slice(2)], {

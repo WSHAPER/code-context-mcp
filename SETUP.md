@@ -28,6 +28,9 @@ Replace `<CLAUDE_CONFIG_DIR>` with your actual path:
 
 Copy `.env.example` to `.env` and adjust paths if needed.
 
+The `repos/` directory stores configuration metadata for repositories, not full clones.
+For local repositories (file:// URLs), no cloning occurs - files are accessed directly.
+
 ## Test
 
 ```bash

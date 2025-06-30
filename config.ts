@@ -15,8 +15,8 @@ export const EMBEDDING_MODELS = {
 
 export const codeContextConfig = {
   ENV: process.env.NODE_ENV || "development",
-  REPO_CACHE_DIR:
-    process.env.REPO_CACHE_DIR ||
+  REPO_CONFIG_DIR:
+    process.env.REPO_CONFIG_DIR ||
     path.join(os.homedir(), ".codeContextMcp", "repos"),
   BATCH_SIZE: 100,
   DATA_DIR:
